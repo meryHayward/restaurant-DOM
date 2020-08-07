@@ -77,3 +77,12 @@ input::placeholder {
 button:focus {
     outline: none;
 }
+
+#btnCerrarMesa {
+    background-color: #2fdba7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 15px;
+}
