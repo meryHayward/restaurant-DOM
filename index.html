@@ -1,58 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Restaurant</title>
-        <link rel="stylesheet" href="./css/styles.css">
-    </head>
-    <body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
 
 
-        <h1>Ejercicio Restaurant</h1>
-        
-        <!------------- tabla 1 ------------->
-        <section class="container-1">
-            <header>
-                <p>Mesas</p>
-            </header>
-            <div class="container-table">
-                <table class="table-1">
-                    <thead>
-                        <tr style="border: none">
-                            <th>Numero de Mesa</th>
-                            <th>Cuenta</th>
-                            <th>Cerrar Mesa</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-1"></tbody>
-                </table>
-            </div>
-            <input type="text" name="nroMesa" id="nroMesa" placeholder="Numero de Mesa">
-            <button type="button" id="agregarMesa">Agregar Mesa</button>
-        </section>
+    <h1>Ejercicio Restaurant</h1>
+
+    <!------------- tabla 1 ------------->
+    <section class="container-1">
+        <header>
+            <p>Mesas</p>
+        </header>
+        <div class="container-table">
+            <table class="table-1">
+                <thead>
+                    <tr style="border: none">
+                        <th>Numero de Mesa</th>
+                        <th>Cuenta</th>
+                        <th>Cerrar Mesa</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-1"></tbody>
+            </table>
+        </div>
+        <input type="text" name="nroMesa" id="nroMesa" placeholder="Numero de Mesa">
+        <button type="button" id="agregarMesa">Agregar Mesa</button>
+    </section>
 
 
-        <!------------- tabla 2 ------------->
-        <section class="container-2">
-            <header>
-                <p>Productos</p>
-            </header>
-            <div class="container-table">
-                <table class="table-2">
-                    <thead>
-                        <tr style="border: none">
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-2"></tbody>
-                </table>
-            </div>
-            <input type="text" name="producto" id="producto" placeholder="Producto">
-            <input type="text" name="precio" id="precio" placeholder="Precio">
-            <button type="button" id="agregarProducto">Agregar Producto</button>
-        </section>
+    <!------------- tabla 2 ------------->
+    <section class="container-2">
+        <header>
+            <p>Productos</p>
+        </header>
+        <div class="container-table">
+            <table class="table-2">
+                <thead>
+                    <tr style="border: none">
+                        <th>Id</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-2"></tbody>
+            </table>
+        </div>
+        <input type="text" name="producto" id="producto" placeholder="Producto">
+        <input type="text" name="precio" id="precio" placeholder="Precio">
+        <button type="button" id="agregarProducto">Agregar Producto</button>
+    </section>
+    <!------------- tabla 3 ------------->
+    <section class="container-2">
+        <header>
+            <p>Cargar Producto</p>
+        </header>
+        <div class="container-table">
+            <table class="table-3">
+                <thead>
+                    <tr style="border: none">
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-3"></tbody>
+            </table>
+        </div>
+        <select name="" id="NroMesaDropDown">
+            <option disabled selected>Numero de mesa</option>
+        </select>
+        <button type="button" id="agregarAmesa">Agregar a Mesa</button>
+    </section>
 
-<script type="text/javascript" src="js/index.js"></script>
-    </body>
+    <script type="text/javascript" src="js/index.js"></script>
+</body>
+
 </html>
