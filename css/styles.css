@@ -49,19 +49,19 @@ th, td {
     padding: 10px 30px;
 }
 
-input[type=text] {
+input[type=text], .agregarCantidad {
     border-radius: 5px;
     border: 1px solid #cfcfcf;
     padding: 10px;
     margin-right: 15px;
 }
 
-input:focus {
+input:focus, .agregarCantidad:focus {
     border: 1px solid #2f7fdb;
     outline: none;
 }
 
-input::placeholder {
+input::placeholder, .agregarCantidad::placeholder {
     font-size: 15px;
 }
 
