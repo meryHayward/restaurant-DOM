@@ -9,7 +9,7 @@ const productos = [];
 class Mesa {
     constructor(nroMesa) {
         this.nroMesa = nroMesa;
-        this.cuenta = new Cuenta()
+        /*Fede hizo getCuenta */ this.cuenta = new Cuenta()
     };
 };
 
@@ -26,10 +26,10 @@ class Producto {
 class Cuenta {
     constructor(){
         this.ListadeProducto = [
-            {
+          /*  {
                 producto: new Producto(),
                 cantidad
-            }
+            }*/
         ];
     }
 
@@ -41,7 +41,7 @@ class Cuenta {
 //////////////////////////////////////////////
 const button = document.querySelector("#agregarMesa");
 button.addEventListener("click", event => {
-    const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un promt
+    const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un prompt
     const tbody = document.querySelector("#tbody-1");//// A partir de aqui se crean todos los demas
     const mesa = new Mesa(input);//// por aca ingreso a la nva instacia de mesa el nro
     mesas.push(mesa);
@@ -90,6 +90,12 @@ const actualizarSelect = () => {
         option.innerText = mesa.nroMesa;
         option.value = mesa.nroMesa;
     }
+    select.addEventListener('change',
+    function(){
+      let selectedOption = this.options[select.selectedIndex];
+      console.log(selectedOption.value);
+    });  
+
 };
 ///////////////////////////////////////////////////////
 let id = 01;
@@ -168,7 +174,9 @@ const agregarProducto = () => {
 const button3 = document.querySelector("#agregarAmesa");
 button3.addEventListener("click", event => {
     	document.querySelectorAll('.agregarCantidad').forEach(productoInput =>{
-            	const idProducto= productoInput.id.split("-")[1];
+                const idProducto= productoInput.id.split("-")[1];
+                const productoCantidad = productoInput.value;
+
         });
 
 });
