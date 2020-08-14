@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant</title>
     <link rel="stylesheet" href="./css/styles.css">
+    <script type="text/javascript" src="js/index.js"></script>
 </head>
 
-<body>
+<body onload = "load()">
 
 
     <h1>Ejercicio Restaurant</h1>
@@ -57,6 +58,7 @@
         <input type="text" name="precio" id="precio" placeholder="Precio">
         <button type="button" id="agregarProducto">Agregar Producto</button>
     </section>
+
     <!------------- tabla 3 ------------->
     <section class="container-2">
         <header>
@@ -74,12 +76,36 @@
             </table>
         </div>
         <select name="" id="NroMesaDropDown">
-            <option disabled selected>Numero de mesa</option>
+            <option disabled selected>Número de mesa</option>
         </select>
         <button type="button" id="agregarAmesa">Agregar a Mesa</button>
     </section>
 
-    <script type="text/javascript" src="js/index.js"></script>
+    <!------------- tabla 4 ------------->
+    <section class="container-2">
+        <header>
+            <p>Productos por Mesa</p>
+        </header>
+        <div class="container-table">
+            <table class="table-4">
+                <thead>
+                    <tr style="border: none">
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-4"></tbody>
+            </table>
+        </div>
+        <select name="" id="NroMesaCompleta">
+            <option disabled selected>Número de mesa</option>
+        </select>
+       
+    </section>
+
+   
 </body>
 
 </html>

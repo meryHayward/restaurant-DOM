@@ -96,7 +96,7 @@ button:focus {
     font-size: 15px;
 }
 
-#NroMesaDropDown {
+#NroMesaDropDown, #NroMesaCompleta {
     color:#3c3c3c;
     border: 1px solid #cfcfcf;
     padding: 10px 20px;
