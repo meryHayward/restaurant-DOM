@@ -23,23 +23,26 @@ class Producto {
 };
 // 
 class Cuenta {
-    constructor(){
+    constructor() {
         this.ListadeProducto = [
-          /*  {
-                producto: new Producto(),
-                cantidad
-            }*/
+            /*  {
+                  producto: new Producto(),
+                  cantidad
+              }*/
         ];
     };
     agregar(idProducto, cantidad) { //cantidad es productoCantidad
         productos.forEach(producto => {
-            if(producto.id == idProducto){
-                this.ListadeProducto.push({producto, cantidad})
+            if (producto.id == idProducto) {
+                this.ListadeProducto.push({ producto, cantidad })
             };
         });
     };
 };
 /////////////////////////////////////////////////////////////////////////
+/* PRIMERA TABLA */
+/////////////////////////////////////////
+
 const agregarMesa = event => {
     const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un prompt
     const tbody = document.querySelector("#tbody-1");//// A partir de aqui se crean todos los demas
@@ -57,10 +60,13 @@ const agregarMesa = event => {
 
     //// AGREGANDOLE VALORES
     btnCerrarMesa.innerText = "Cerrar"
-    td1.innerText = input;
+    td1.innerText = mesa.nroMesa;
+
+    td2.classList.add("agregarTotalCuenta"); /// agregamos una clase para seleccionarla luego
+    td2.id = "cuenta-" + mesa.nroMesa;/// generamos un id a la cuenta
     td2.innerText = "0";
 
-   
+
     //// AGREGANDO AL HTML
     td3.appendChild(btnCerrarMesa);
     tr.appendChild(td1);/// a la izq
@@ -78,10 +84,10 @@ const agregarMesa = event => {
 
     //// aqui llamamos a la función del select, ya que si la mesa esta vacia no hay select
     actualizarSelect();
-
+    actualizarSelectDetalle();
 };
 /////////////////////////////////////////////////////////////////////////////////////////
-
+/* SEGUNDA TABLA PRODUCTOS */
 ////////////////////////////////////////////////////////////////////////////////////////
 let id = 01;
 const agregarProductos = event => {
@@ -126,8 +132,11 @@ const agregarProductos = event => {
     btnEliminarProducto.addEventListener("click", borrar);
 
     cargarProductosAMesa();
-};
 
+};
+//////////////////////////////////////////////
+/* TERCERA TABLA CANTIDAD */
+//////////////////////////////////////////////
 //funcion agregar producto
 const cargarProductosAMesa = () => {
     const tbody = document.querySelector("#tbody-3");
@@ -138,7 +147,7 @@ const cargarProductosAMesa = () => {
         const td2 = document.createElement("td");
         const input = document.createElement("input");
         input.classList.add("agregarCantidad");
-        input.id = "inputproducto-"+producto.id;
+        input.id = "inputproducto-" + producto.id;
         input.placeholder = "Cantidad";
         input.type = "number";
         /// agregando al html
@@ -152,18 +161,25 @@ const cargarProductosAMesa = () => {
     };
 };
 
- const cargarProductos = event => {
-    	document.querySelectorAll('.agregarCantidad').forEach(productoInput =>{
-            const idProducto= productoInput.id.split("-")[1];
-            const productoCantidad = productoInput.value;
+const cargarProductos = event => {
+    document.querySelectorAll('.agregarCantidad').forEach(productoInput => {
+        const idProducto = productoInput.id.split("-")[1];
+        const productoCantidad = productoInput.value;
+        if (productoCantidad) {
             mesas.forEach(mesa => {
-                if(mesa.nroMesa === selectedOption){
-                    mesa.cuenta.agregar(idProducto, productoCantidad);  // al tener en Mesa la propiedad cuenta, tenemos acceso a la cuenta. estamos agregando
-                    //asignar un id al td2 que le corresponde cuenta en la tabla numero 1 //
+                if (mesa.nroMesa === selectedOption) {
+                    mesa.cuenta.agregar(idProducto, productoCantidad);
+                    document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {
+                        const idCuenta = cuentaTd.id.split("-")[1];
+                        if (selectedOption === idCuenta) {
+                            const cuentaTotal = mesa.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
+                            cuentaTd.innerText = cuentaTotal;
+                        }
+                    });
                 };
             });
-        });
-        
+        }
+    });
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -179,15 +195,15 @@ const actualizarSelect = () => {
         option.value = mesa.nroMesa;
     }
     select.addEventListener('change', () => {
-      selectedOption = select.options[select.selectedIndex].value;
-     /* console.log(selectedOption.value);*/
-    });  
+        selectedOption = select.options[select.selectedIndex].value;
+        /* console.log(selectedOption.value);*/
+    });
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ////CUARTA TABLA
-const tbody = document.querySelector("#tbody-4");
+/* const tbody = document.querySelector("#tbody-4");
 const tr = document.createElement("tr");
 const td1 = document.createElement("td");
 const td2 = document.createElement("td");
@@ -195,17 +211,58 @@ const td3 = document.createElement("td");
 const td4 = document.createElement("td");
 const btnEliminarProducto = document.createElement("button");
 btnEliminarProducto.type = "button";
-btnEliminarProducto.id = "btnEliminarProducto";
+btnEliminarProducto.id = "btnEliminarProducto"; */
 
 ////// AGREGAR VALORES////
-btnEliminarProducto.innerText = "Eliminar";
+/* btnEliminarProducto.innerText = "Eliminar"; */
+
+/* FUNCION DEL SELECT DETALLE DE MESA*/
+let selectedOptionDetalle;
+const actualizarSelectDetalle = () => {
+    const select = document.querySelector("#NroMesaCompleta");
+    select.innerHTML = "";/// se resetean las options para crear desde cero
+    for (let mesa of mesas) {//// mesa es cada uno de los indices del array mesa
+        const option = document.createElement("option");
+        select.appendChild(option);
+        option.innerText = mesa.nroMesa;
+        option.value = mesa.nroMesa;
+    }
+
+};
+
+
+
 const detalleDeMesa = () => {
+    const selectDetalle = document.querySelector("#NroMesaCompleta");
+    const tbody = document.querySelector("#tbody-4");
+    tbody.innerHTML = "";
     mesas.forEach(mesa => {
-        console.log("Hola")
-   mesa.forEach(cuenta => 
-        console.log(cuenta)
-    );
-});
+        if (selectDetalle.value == mesa.nroMesa) {
+            mesa.cuenta.ListadeProducto.forEach(producto => {
+                const tr = document.createElement("tr");
+                const td1 = document.createElement("td");
+                const td2 = document.createElement("td");
+                const td3 = document.createElement("td");
+                const td4 = document.createElement("td");
+                const btnEliminarProducto = document.createElement("button");
+                btnEliminarProducto.type = "button";
+                btnEliminarProducto.id = "btnEliminarProducto";
+
+                btnEliminarProducto.innerText = "Eliminar";
+                td1.innerText = producto.producto.producto;
+                td2.innerText = producto.cantidad;
+                td3.innerText = producto.producto.precio;
+
+                td4.appendChild(btnEliminarProducto);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+                tbody.appendChild(tr);
+            })
+
+        }
+    });
 };
 
 /*
@@ -229,22 +286,23 @@ tbody.appendChild(tr);*/
 const load = () => {
     const button = document.querySelector("#agregarMesa");
     button.addEventListener("click", agregarMesa);
-     
+
     //BOTON ACEPTAR CON ENTER agregar mesa
     const input = document.querySelector("#nroMesa")
     input.addEventListener("keypress", event => {
-        if(event.keyCode === 13){
+        if (event.keyCode === 13) {
             agregarMesa();
         };
     });
     const button2 = document.querySelector("#agregarProducto");
     button2.addEventListener("click", agregarProductos);
-    
+
     /*BOTON ACEPTAR CON ENTER agregar productos -PREGUNTAR A FEDE-  porque tiene dos input*/
-     
+
     const button3 = document.querySelector("#agregarAmesa");
-    button3.addEventListener("click", cargarProductos);   
-    
-    
+    button3.addEventListener("click", cargarProductos);
+
+    const selectDetalle = document.querySelector("#NroMesaCompleta");
+    selectDetalle.addEventListener("change", detalleDeMesa);
 };
 /////////////////////////////////////
