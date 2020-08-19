@@ -1,17 +1,22 @@
 ///ARRAYS -listas
 //
-const mesas = []; ///instancias de la clase mesa
+let mesas = []; ///instancias de la clase mesa
 
 //
-const productos = [];
+let productos = [];
 
 ///CLASES
 //
 class Mesa {
     constructor(nroMesa) {
         this.nroMesa = nroMesa;
-        /*Fede hizo getCuenta */ this.cuenta = new Cuenta()
+        /*Fede hizo getCuenta */ this.cuenta = new Cuenta(); // modifica la cuenta 
     };
+    eliminarMesa () {
+        mesas =  mesas.filter(mesa => {
+           return mesa.nroMesa !== this.nroMesa        
+        });
+    }    
 };
 //
 class Producto {
@@ -20,6 +25,11 @@ class Producto {
         this.producto = producto;
         this.precio = precio;
     };
+    eliminarProducto () {
+        productos = productos.filter(producto => {
+            return producto.id !== this.id
+        });
+    }
 };
 // 
 class Cuenta {
@@ -46,7 +56,7 @@ class Cuenta {
 const agregarMesa = event => {
     const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un prompt
     const tbody = document.querySelector("#tbody-1");//// A partir de aqui se crean todos los demas
-    const mesa = new Mesa(input);//// por aca ingreso a la nva instacia de mesa el nro
+    const mesa = new Mesa(Number(input));//// por aca ingreso a la nva instacia de mesa el nro
     mesas.push(mesa);
 
     ///// CREO ELEMENTOS AL HACERLE CLICK AL BOTON
@@ -59,11 +69,12 @@ const agregarMesa = event => {
     btnCerrarMesa.id = "btnCerrarMesa";
 
     //// AGREGANDOLE VALORES
-    btnCerrarMesa.innerText = "Cerrar"
+    btnCerrarMesa.innerText = "Cerrar";
     td1.innerText = mesa.nroMesa;
 
+
     td2.classList.add("agregarTotalCuenta"); /// agregamos una clase para seleccionarla luego
-    td2.id = "cuenta-" + mesa.nroMesa;/// generamos un id a la cuenta
+    td2.id = "cuenta-" + mesa.nroMesa;/// generamos un id a la cuenta (cuenta-1)
     td2.innerText = "0";
 
 
@@ -77,7 +88,10 @@ const agregarMesa = event => {
     document.querySelector("#nroMesa").value = "";/// input.value=""/// esto es para que se reinicie el input y no haya ningun valor previo
     const borrar = event => {
         const eliminar = event.target.parentElement.parentElement;/// el target te dice el btn dde estas haciendo la accion, quien es el bton
+        mesa.eliminarMesa();
         eliminar.remove();
+        actualizarSelect();
+        actualizarSelectDetalle();
     };
 
     btnCerrarMesa.addEventListener("click", borrar);
@@ -89,7 +103,7 @@ const agregarMesa = event => {
 /////////////////////////////////////////////////////////////////////////////////////////
 /* SEGUNDA TABLA PRODUCTOS */
 ////////////////////////////////////////////////////////////////////////////////////////
-let id = 01;
+let id = 01; 
 const agregarProductos = event => {
     const input2 = document.querySelector("#producto").value;
     const input3 = document.querySelector("#precio").value;
@@ -107,7 +121,7 @@ const agregarProductos = event => {
     btnEliminarProducto.id = "btnEliminarProducto";
 
     ////// AGREGAR VALORES////
-    btnEliminarProducto.innerText = "Eliminar"
+    btnEliminarProducto.innerText = "Eliminar";
 
     /* td1.innerText = input; */
     td1.innerText = id++;
@@ -127,6 +141,7 @@ const agregarProductos = event => {
     document.querySelector("#precio").value = "";
     const borrar = event => {
         const eliminar = event.target.parentElement.parentElement;
+        producto.eliminarProducto();
         eliminar.remove();
     };
     btnEliminarProducto.addEventListener("click", borrar);
@@ -147,7 +162,7 @@ const cargarProductosAMesa = () => {
         const td2 = document.createElement("td");
         const input = document.createElement("input");
         input.classList.add("agregarCantidad");
-        input.id = "inputproducto-" + producto.id;
+        input.id = "inputproducto-" + producto.id;  //inputproducto-1 cambia el numero por cada producto nuevo
         input.placeholder = "Cantidad";
         input.type = "number";
         /// agregando al html
@@ -162,15 +177,15 @@ const cargarProductosAMesa = () => {
 };
 
 const cargarProductos = event => {
-    document.querySelectorAll('.agregarCantidad').forEach(productoInput => {
-        const idProducto = productoInput.id.split("-")[1];
+    document.querySelectorAll(".agregarCantidad").forEach(productoInput => {
+        const idProducto = productoInput.id.split("-")[1]; // ["inputproducto", "1"]
         const productoCantidad = productoInput.value;
         if (productoCantidad) {
             mesas.forEach(mesa => {
                 if (mesa.nroMesa === selectedOption) {
                     mesa.cuenta.agregar(idProducto, productoCantidad);
                     document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {
-                        const idCuenta = cuentaTd.id.split("-")[1];
+                        const idCuenta = cuentaTd.id.split("-")[1]; 
                         if (selectedOption === idCuenta) {
                             const cuentaTotal = mesa.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
                             cuentaTd.innerText = cuentaTotal;
@@ -188,7 +203,14 @@ let selectedOption;
 const actualizarSelect = () => {
     const select = document.querySelector("#NroMesaDropDown");
     select.innerHTML = "";/// se resetean las options para crear desde cero
-    for (let mesa of mesas) {//// mesa es cada uno de los indices del array mesa
+    /*lo que hizo fede*/
+    const defaultOption = document.createElement("option")
+    defaultOption.selected = true;
+    defaultOption.disabled = true;
+    defaultOption.innerText = "Nro de Mesa";
+    select.appendChild(defaultOption);
+    /*lo que hizo fede*/
+    for (let mesa of mesas) { //// mesa es cada uno de los indices del array mesa
         const option = document.createElement("option");
         select.appendChild(option);
         option.innerText = mesa.nroMesa;
@@ -221,16 +243,18 @@ let selectedOptionDetalle;
 const actualizarSelectDetalle = () => {
     const select = document.querySelector("#NroMesaCompleta");
     select.innerHTML = "";/// se resetean las options para crear desde cero
+    const defaultOption = document.createElement("option")
+    defaultOption.selected = true;
+    defaultOption.disabled = true;
+    defaultOption.innerText = "Nro de Mesa";
+    select.appendChild(defaultOption);
     for (let mesa of mesas) {//// mesa es cada uno de los indices del array mesa
         const option = document.createElement("option");
         select.appendChild(option);
         option.innerText = mesa.nroMesa;
         option.value = mesa.nroMesa;
     }
-
 };
-
-
 
 const detalleDeMesa = () => {
     const selectDetalle = document.querySelector("#NroMesaCompleta");
@@ -280,8 +304,6 @@ tr.appendChild(td4);
 tbody.appendChild(tr);*/
 
 
-
-
 /////////////////FUNCION LOAD PRINCIPAL (LA QUE ESTA EN EL BODY)
 const load = () => {
     const button = document.querySelector("#agregarMesa");
@@ -305,4 +327,4 @@ const load = () => {
     const selectDetalle = document.querySelector("#NroMesaCompleta");
     selectDetalle.addEventListener("change", detalleDeMesa);
 };
-/////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
