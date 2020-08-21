@@ -12,11 +12,11 @@ class Mesa {
         this.nroMesa = nroMesa;
         /*Fede hizo getCuenta */ this.cuenta = new Cuenta(); // modifica la cuenta 
     };
-    eliminarMesa () {
-        mesas =  mesas.filter(mesa => {
-           return mesa.nroMesa !== this.nroMesa        
+    eliminarMesa() {
+        mesas = mesas.filter(mesa => {
+            return mesa.nroMesa !== this.nroMesa
         });
-    }    
+    }
 };
 //
 class Producto {
@@ -25,7 +25,7 @@ class Producto {
         this.producto = producto;
         this.precio = precio;
     };
-    eliminarProducto () {
+    eliminarProducto() {
         productos = productos.filter(producto => {
             return producto.id !== this.id
         });
@@ -56,8 +56,13 @@ class Cuenta {
 const agregarMesa = event => {
     const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un prompt
     const tbody = document.querySelector("#tbody-1");//// A partir de aqui se crean todos los demas
-    const mesa = new Mesa(Number(input));//// por aca ingreso a la nva instacia de mesa el nro
+
+    const mesa = new Mesa(input);//// por aca ingreso a la nva instacia de mesa el nro
+    /*  if (!(mesa instanceof Mesa)) throw new Error("No pertenece a una instacia de mesa");
+     this.buscar = numeroDeMesa => this.lista.find(mesa => mesa.numero === numeroDeMesa);
+ }    if (this.buscar(mesa.numero)) throw new Error("La mesa ya esta cargada"); */
     mesas.push(mesa);
+
 
     ///// CREO ELEMENTOS AL HACERLE CLICK AL BOTON
     const tr = document.createElement("tr");/// fila
@@ -103,7 +108,7 @@ const agregarMesa = event => {
 /////////////////////////////////////////////////////////////////////////////////////////
 /* SEGUNDA TABLA PRODUCTOS */
 ////////////////////////////////////////////////////////////////////////////////////////
-let id = 01; 
+let id = 01;
 const agregarProductos = event => {
     const input2 = document.querySelector("#producto").value;
     const input3 = document.querySelector("#precio").value;
@@ -185,7 +190,7 @@ const cargarProductos = event => {
                 if (mesa.nroMesa === selectedOption) {
                     mesa.cuenta.agregar(idProducto, productoCantidad);
                     document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {
-                        const idCuenta = cuentaTd.id.split("-")[1]; 
+                        const idCuenta = cuentaTd.id.split("-")[1];
                         if (selectedOption === idCuenta) {
                             const cuentaTotal = mesa.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
                             cuentaTd.innerText = cuentaTotal;
@@ -196,6 +201,33 @@ const cargarProductos = event => {
         }
     });
 };
+
+
+/* const cargarProductos = event => {
+    let mesaSeleccionada;
+    document.querySelectorAll(".agregarCantidad").forEach(productoInput => {
+        const idProducto = productoInput.id.split("-")[1]; // ["inputproducto", "1"]
+        const productoCantidad = productoInput.value;
+        if (productoCantidad) {
+            mesas.forEach(mesa => {
+                mesaSeleccionada = mesa;
+                console.log("mesa 1", mesaSeleccionada);
+                if (mesa.nroMesa === selectedOption) {
+                    mesa.cuenta.agregar(idProducto, productoCantidad);
+                };
+            });
+        }
+    });
+    document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {///es la cuenta de cada mesa
+        console.log("mesa 2", mesaSeleccionada);
+        const idCuenta = cuentaTd.id.split("-")[1];
+        if (mesaSeleccionada.nroMesa === idCuenta) {
+            const cuentaTotal = mesaSeleccionada.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
+            console.log(cuentaTotal)
+            cuentaTd.innerText = cuentaTotal;////// NO LO ENTIENDO!!!!             
+        }
+    });
+}; */
 
 ////////////////////////////////////////////////////////////////////////////////
 //FUNCION DEL SELECT
