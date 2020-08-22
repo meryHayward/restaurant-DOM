@@ -2,6 +2,12 @@
 //
 let mesas = []; ///instancias de la clase mesa
 
+const  validacionDeMesa = mesa => {
+    if (!(mesa instanceof Mesa)) throw new Error("No pertenece a una instacia de mesa");
+    const buscarNroDeMesa = mesas.findIndex(mesita => mesita.nroMesa === mesa.nroMesa);
+    if (buscarNroDeMesa !== -1) throw new Error("La mesa ya esta cargada"); 
+};
+
 //
 let productos = [];
 
@@ -9,14 +15,15 @@ let productos = [];
 //
 class Mesa {
     constructor(nroMesa) {
-        this.nroMesa = nroMesa;
+        this.nroMesa = Number(nroMesa);
+        if (isNaN(this.nroMesa)) throw new Error("No es un número");
         /*Fede hizo getCuenta */ this.cuenta = new Cuenta(); // modifica la cuenta 
     };
     eliminarMesa() {
         mesas = mesas.filter(mesa => {
             return mesa.nroMesa !== this.nroMesa
         });
-    }
+    };
 };
 //
 class Producto {
@@ -36,9 +43,9 @@ class Cuenta {
     constructor() {
         this.ListadeProducto = [
             /*  {
-                  producto: new Producto(),
-                  cantidad
-              }*/
+                producto: new Producto(),
+                cantidad
+            }*/
         ];
     };
     agregar(idProducto, cantidad) { //cantidad es productoCantidad
@@ -56,14 +63,11 @@ class Cuenta {
 const agregarMesa = event => {
     const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un prompt
     const tbody = document.querySelector("#tbody-1");//// A partir de aqui se crean todos los demas
-
+    
     const mesa = new Mesa(input);//// por aca ingreso a la nva instacia de mesa el nro
-    /*  if (!(mesa instanceof Mesa)) throw new Error("No pertenece a una instacia de mesa");
-     this.buscar = numeroDeMesa => this.lista.find(mesa => mesa.numero === numeroDeMesa);
- }    if (this.buscar(mesa.numero)) throw new Error("La mesa ya esta cargada"); */
+    validacionDeMesa(mesa);
     mesas.push(mesa);
-
-
+    
     ///// CREO ELEMENTOS AL HACERLE CLICK AL BOTON
     const tr = document.createElement("tr");/// fila
     const td1 = document.createElement("td");/// columna
@@ -181,7 +185,7 @@ const cargarProductosAMesa = () => {
     };
 };
 
-const cargarProductos = event => {
+/*const cargarProductos = event => {
     document.querySelectorAll(".agregarCantidad").forEach(productoInput => {
         const idProducto = productoInput.id.split("-")[1]; // ["inputproducto", "1"]
         const productoCantidad = productoInput.value;
@@ -200,34 +204,34 @@ const cargarProductos = event => {
             });
         }
     });
-};
+};*/
 
-
-/* const cargarProductos = event => {
+const cargarProductos = event => {
     let mesaSeleccionada;
-    document.querySelectorAll(".agregarCantidad").forEach(productoInput => {
+    const elementos =  document.querySelectorAll(".agregarCantidad")
+    for(let productoInput of elementos) {
         const idProducto = productoInput.id.split("-")[1]; // ["inputproducto", "1"]
         const productoCantidad = productoInput.value;
         if (productoCantidad) {
-            mesas.forEach(mesa => {
+            for(let mesa of mesas) {
                 mesaSeleccionada = mesa;
                 console.log("mesa 1", mesaSeleccionada);
                 if (mesa.nroMesa === selectedOption) {
                     mesa.cuenta.agregar(idProducto, productoCantidad);
                 };
-            });
+            };
         }
-    });
+    };
     document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {///es la cuenta de cada mesa
         console.log("mesa 2", mesaSeleccionada);
         const idCuenta = cuentaTd.id.split("-")[1];
         if (mesaSeleccionada.nroMesa === idCuenta) {
             const cuentaTotal = mesaSeleccionada.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
             console.log(cuentaTotal)
-            cuentaTd.innerText = cuentaTotal;////// NO LO ENTIENDO!!!!             
+            cuentaTd.innerText = cuentaTotal;//////         
         }
     });
-}; */
+}; 
 
 ////////////////////////////////////////////////////////////////////////////////
 //FUNCION DEL SELECT
@@ -351,10 +355,22 @@ const load = () => {
     const button2 = document.querySelector("#agregarProducto");
     button2.addEventListener("click", agregarProductos);
 
+   // preguntar a fedeeeeeeeeeeee//
+   /* button2.addEventListener("keypress",event => {
+        if (event.keyCode === 13) { //
+            agregarProductos(); 
+        };
+    });*/
+
     /*BOTON ACEPTAR CON ENTER agregar productos -PREGUNTAR A FEDE-  porque tiene dos input*/
 
     const button3 = document.querySelector("#agregarAmesa");
     button3.addEventListener("click", cargarProductos);
+    button3.addEventListener("keypress", event => {
+        if (event.keyCode === 13) {
+            cargarProductos(); 
+        };
+    });
 
     const selectDetalle = document.querySelector("#NroMesaCompleta");
     selectDetalle.addEventListener("change", detalleDeMesa);
