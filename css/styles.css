@@ -87,7 +87,7 @@ button:focus {
     font-size: 15px;
 }
 
-#btnEliminarProducto {
+#btnEliminarProducto, #btnLimpiarCuenta{
     background-color: crimson;
     color: white;
     border: none;

@@ -185,17 +185,17 @@ const cargarProductosAMesa = () => {
     };
 };
 
-/*const cargarProductos = event => {
+const cargarProductos = event => {
     document.querySelectorAll(".agregarCantidad").forEach(productoInput => {
         const idProducto = productoInput.id.split("-")[1]; // ["inputproducto", "1"]
         const productoCantidad = productoInput.value;
         if (productoCantidad) {
             mesas.forEach(mesa => {
-                if (mesa.nroMesa === selectedOption) {
+                if (mesa.nroMesa == selectedOption) {
                     mesa.cuenta.agregar(idProducto, productoCantidad);
                     document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {
                         const idCuenta = cuentaTd.id.split("-")[1];
-                        if (selectedOption === idCuenta) {
+                        if (selectedOption == idCuenta) {
                             const cuentaTotal = mesa.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
                             cuentaTd.innerText = cuentaTotal;
                         }
@@ -204,9 +204,9 @@ const cargarProductosAMesa = () => {
             });
         }
     });
-};*/
+};
 
-const cargarProductos = event => {
+/*const cargarProductos = event => {
     let mesaSeleccionada;
     const elementos =  document.querySelectorAll(".agregarCantidad")
     for(let productoInput of elementos) {
@@ -231,7 +231,7 @@ const cargarProductos = event => {
             cuentaTd.innerText = cuentaTotal;//////         
         }
     });
-}; 
+}; */
 
 ////////////////////////////////////////////////////////////////////////////////
 //FUNCION DEL SELECT
@@ -253,26 +253,14 @@ const actualizarSelect = () => {
         option.value = mesa.nroMesa;
     }
     select.addEventListener('change', () => {
-        selectedOption = select.options[select.selectedIndex].value;
+        selectedOption = select.options[select.selectedIndex].value; // puede ir Number() al ppio si queremos....
         /* console.log(selectedOption.value);*/
     });
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-////CUARTA TABLA
-/* const tbody = document.querySelector("#tbody-4");
-const tr = document.createElement("tr");
-const td1 = document.createElement("td");
-const td2 = document.createElement("td");
-const td3 = document.createElement("td");
-const td4 = document.createElement("td");
-const btnEliminarProducto = document.createElement("button");
-btnEliminarProducto.type = "button";
-btnEliminarProducto.id = "btnEliminarProducto"; */
-
-////// AGREGAR VALORES////
-/* btnEliminarProducto.innerText = "Eliminar"; */
+////CUARTA TABLA//////////////////////////////
 
 /* FUNCION DEL SELECT DETALLE DE MESA*/
 let selectedOptionDetalle;
@@ -304,40 +292,31 @@ const detalleDeMesa = () => {
                 const td2 = document.createElement("td");
                 const td3 = document.createElement("td");
                 const td4 = document.createElement("td");
-                const btnEliminarProducto = document.createElement("button");
-                btnEliminarProducto.type = "button";
-                btnEliminarProducto.id = "btnEliminarProducto";
+                const btnLimpiarCuenta = document.createElement("button");
+                btnLimpiarCuenta.type = "button";
+                btnLimpiarCuenta.id = "btnLimpiarCuenta";
 
-                btnEliminarProducto.innerText = "Eliminar";
+                btnLimpiarCuenta.innerText = "Limpiar";
                 td1.innerText = producto.producto.producto;
                 td2.innerText = producto.cantidad;
                 td3.innerText = producto.producto.precio;
 
-                td4.appendChild(btnEliminarProducto);
+                td4.appendChild(btnLimpiarCuenta);
                 tr.appendChild(td1);
                 tr.appendChild(td2);
                 tr.appendChild(td3);
                 tr.appendChild(td4);
                 tbody.appendChild(tr);
-            })
 
-        }
+                const limpiarCuenta = event => {
+                    const limpiar = event.target.parentElement.parentElement;
+                    limpiar.remove();
+                };
+                    btnLimpiarCuenta.addEventListener("click", limpiarCuenta);
+                });
+            };
     });
 };
-
-/*
-td1.innerText = 
-td2.innerText = 
-td3.innerText = 
-
-////// AGREGAR AL HTML
-
-td4.appendChild(btnEliminarProducto);
-tr.appendChild(td1);
-tr.appendChild(td2);
-tr.appendChild(td3);
-tr.appendChild(td4);
-tbody.appendChild(tr);*/
 
 
 /////////////////FUNCION LOAD PRINCIPAL (LA QUE ESTA EN EL BODY)
@@ -355,18 +334,16 @@ const load = () => {
     const button2 = document.querySelector("#agregarProducto");
     button2.addEventListener("click", agregarProductos);
 
-   // preguntar a fedeeeeeeeeeeee//
-   /* button2.addEventListener("keypress",event => {
-        if (event.keyCode === 13) { //
+   // Hacer al INPUT //
+   document.querySelector("#precio").addEventListener("keydown",event => {
+        if (event.keyCode === 13) { 
             agregarProductos(); 
         };
-    });*/
-
-    /*BOTON ACEPTAR CON ENTER agregar productos -PREGUNTAR A FEDE-  porque tiene dos input*/
+    });
 
     const button3 = document.querySelector("#agregarAmesa");
     button3.addEventListener("click", cargarProductos);
-    button3.addEventListener("keypress", event => {
+    document.querySelector("#NroMesaDropDown").addEventListener("keydown", event => {
         if (event.keyCode === 13) {
             cargarProductos(); 
         };
@@ -375,4 +352,4 @@ const load = () => {
     const selectDetalle = document.querySelector("#NroMesaCompleta");
     selectDetalle.addEventListener("change", detalleDeMesa);
 };
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
