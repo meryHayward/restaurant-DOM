@@ -65,7 +65,7 @@ input::placeholder, .agregarCantidad::placeholder {
     font-size: 15px;
 }
 
-#agregarAmesa, #agregarMesa, #agregarProducto {
+.agregarAmesa, .agregarMesa, .agregarProducto {
     background-color: #2f7fdb;
     color: white;
     border: none;
@@ -78,7 +78,7 @@ button:focus {
     outline: none;
 }
 
-#btnCerrarMesa {
+.btnCerrarMesa {
     background-color: #2fdba7;
     color: white;
     border: none;
@@ -87,7 +87,7 @@ button:focus {
     font-size: 15px;
 }
 
-#btnEliminarProducto, #btnLimpiarCuenta{
+.btnEliminarProducto, .btnLimpiarCuenta{
     background-color: crimson;
     color: white;
     border: none;

@@ -8,6 +8,13 @@ const  validacionDeMesa = mesa => {
     if (buscarNroDeMesa !== -1) throw new Error("La mesa ya esta cargada"); 
 };
 
+const  validacionDeProducto = producto => {
+    if (!(producto instanceof Producto)) throw new Error("No pertenece a una instacia de producto");
+    const buscarProducto = productos.findIndex(elemento => elemento.producto === producto.producto);
+    if (buscarProducto !== -1) throw new Error("El producto ya esta cargado"); 
+};
+
+
 //
 let productos = [];
 
@@ -41,6 +48,7 @@ class Producto {
 // 
 class Cuenta {
     constructor() {
+        this.nextId =1;
         this.ListadeProducto = [
             /*  {
                 producto: new Producto(),
@@ -51,16 +59,23 @@ class Cuenta {
     agregar(idProducto, cantidad) { //cantidad es productoCantidad
         productos.forEach(producto => {
             if (producto.id == idProducto) {
-                this.ListadeProducto.push({ producto, cantidad })
+                this.ListadeProducto.push({ id: this.nextId, producto, cantidad })
+                this.nextId++;
             };
         });
+    };
+
+   eliminarConsumicion(id) {
+        this.ListadeProducto = this.ListadeProducto.filter(producto => {
+        return producto.id !== id;
+        })
     };
 };
 /////////////////////////////////////////////////////////////////////////
 /* PRIMERA TABLA */
 /////////////////////////////////////////
 
-const agregarMesa = event => {
+const agregarMesa = () => {
     const input = document.querySelector("#nroMesa").value;/// esto agarra lo que la persona le llena, como un prompt
     const tbody = document.querySelector("#tbody-1");//// A partir de aqui se crean todos los demas
     
@@ -75,7 +90,7 @@ const agregarMesa = event => {
     const td3 = document.createElement("td");/// columna
     const btnCerrarMesa = document.createElement("button");/// es el boton que se crea en la fial cdo aparece el prod
     btnCerrarMesa.type = "button";
-    btnCerrarMesa.id = "btnCerrarMesa";
+    btnCerrarMesa.className = "btnCerrarMesa";
 
     //// AGREGANDOLE VALORES
     btnCerrarMesa.innerText = "Cerrar";
@@ -113,10 +128,11 @@ const agregarMesa = event => {
 /* SEGUNDA TABLA PRODUCTOS */
 ////////////////////////////////////////////////////////////////////////////////////////
 let id = 01;
-const agregarProductos = event => {
+const agregarProductos = () => {
     const input2 = document.querySelector("#producto").value;
     const input3 = document.querySelector("#precio").value;
     const producto = new Producto(id, input2, input3);//// por aca ingreso a la nva instacia de producto
+    validacionDeProducto(producto);
     productos.push(producto);
 
     const tbody = document.querySelector("#tbody-2");
@@ -127,7 +143,7 @@ const agregarProductos = event => {
     const td4 = document.createElement("td");
     const btnEliminarProducto = document.createElement("button");
     btnEliminarProducto.type = "button";
-    btnEliminarProducto.id = "btnEliminarProducto";
+    btnEliminarProducto.className = "btnEliminarProducto";
 
     ////// AGREGAR VALORES////
     btnEliminarProducto.innerText = "Eliminar";
@@ -185,21 +201,25 @@ const cargarProductosAMesa = () => {
     };
 };
 
-const cargarProductos = event => {
+const calcularCuenta = (mesa) => {
+    document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {
+        const idCuenta = cuentaTd.id.split("-")[1];
+        if (selectedOption == idCuenta) {
+            const cuentaTotal = mesa.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);;
+            cuentaTd.innerText = cuentaTotal;
+        }
+    });
+}
+
+const cargarProductos = () => {
     document.querySelectorAll(".agregarCantidad").forEach(productoInput => {
         const idProducto = productoInput.id.split("-")[1]; // ["inputproducto", "1"]
-        const productoCantidad = productoInput.value;
+        const productoCantidad = Number(productoInput.value);
         if (productoCantidad) {
             mesas.forEach(mesa => {
                 if (mesa.nroMesa == selectedOption) {
                     mesa.cuenta.agregar(idProducto, productoCantidad);
-                    document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {
-                        const idCuenta = cuentaTd.id.split("-")[1];
-                        if (selectedOption == idCuenta) {
-                            const cuentaTotal = mesa.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
-                            cuentaTd.innerText = cuentaTotal;
-                        }
-                    });
+                    calcularCuenta(mesa);
                 };
             });
         }
@@ -216,25 +236,28 @@ const cargarProductos = event => {
             for(let mesa of mesas) {
                 mesaSeleccionada = mesa;
                 console.log("mesa 1", mesaSeleccionada);
-                if (mesa.nroMesa === selectedOption) {
+                if (mesa.nroMesa == selectedOption) {
                     mesa.cuenta.agregar(idProducto, productoCantidad);
+                    console.log(selectedOption, idProducto, productoCantidad);
                 };
             };
         }
     };
     document.querySelectorAll(".agregarTotalCuenta").forEach(cuentaTd => {///es la cuenta de cada mesa
-        console.log("mesa 2", mesaSeleccionada);
         const idCuenta = cuentaTd.id.split("-")[1];
-        if (mesaSeleccionada.nroMesa === idCuenta) {
+        console.log("mesa 2", mesaSeleccionada, idCuenta);
+        if (mesaSeleccionada.nroMesa == idCuenta) {
+            console.log("entra");
             const cuentaTotal = mesaSeleccionada.cuenta.ListadeProducto.reduce((acc, producto) => acc + producto.producto.precio * producto.cantidad, 0);
             console.log(cuentaTotal)
             cuentaTd.innerText = cuentaTotal;//////         
         }
     });
-}; */
+};*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //FUNCION DEL SELECT
+
 let selectedOption;
 const actualizarSelect = () => {
     const select = document.querySelector("#NroMesaDropDown");
@@ -259,10 +282,10 @@ const actualizarSelect = () => {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
 ////CUARTA TABLA//////////////////////////////
 
 /* FUNCION DEL SELECT DETALLE DE MESA*/
+
 let selectedOptionDetalle;
 const actualizarSelectDetalle = () => {
     const select = document.querySelector("#NroMesaCompleta");
@@ -294,7 +317,7 @@ const detalleDeMesa = () => {
                 const td4 = document.createElement("td");
                 const btnLimpiarCuenta = document.createElement("button");
                 btnLimpiarCuenta.type = "button";
-                btnLimpiarCuenta.id = "btnLimpiarCuenta";
+                btnLimpiarCuenta.className = "btnLimpiarCuenta";
 
                 btnLimpiarCuenta.innerText = "Limpiar";
                 td1.innerText = producto.producto.producto;
@@ -308,20 +331,24 @@ const detalleDeMesa = () => {
                 tr.appendChild(td4);
                 tbody.appendChild(tr);
 
-                const limpiarCuenta = event => {
-                    const limpiar = event.target.parentElement.parentElement;
+                const limpiarCuenta = () => {
+                    const limpiar = btnLimpiarCuenta.parentElement.parentElement;
+                    mesa.cuenta.eliminarConsumicion(producto.id);
                     limpiar.remove();
-                };
-                    btnLimpiarCuenta.addEventListener("click", limpiarCuenta);
+                    calcularCuenta(mesa);
+                }
+
+                btnLimpiarCuenta.addEventListener("click", limpiarCuenta);
+
                 });
             };
     });
 };
 
-
 /////////////////FUNCION LOAD PRINCIPAL (LA QUE ESTA EN EL BODY)
+
 const load = () => {
-    const button = document.querySelector("#agregarMesa");
+    const button = document.querySelector(".agregarMesa");
     button.addEventListener("click", agregarMesa);
 
     //BOTON ACEPTAR CON ENTER agregar mesa
@@ -331,7 +358,7 @@ const load = () => {
             agregarMesa();
         };
     });
-    const button2 = document.querySelector("#agregarProducto");
+    const button2 = document.querySelector(".agregarProducto");
     button2.addEventListener("click", agregarProductos);
 
    // Hacer al INPUT //
@@ -341,7 +368,7 @@ const load = () => {
         };
     });
 
-    const button3 = document.querySelector("#agregarAmesa");
+    const button3 = document.querySelector(".agregarAmesa");
     button3.addEventListener("click", cargarProductos);
     document.querySelector("#NroMesaDropDown").addEventListener("keydown", event => {
         if (event.keyCode === 13) {
